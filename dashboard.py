@@ -6,7 +6,7 @@ CSV_FILE = 'misure.csv'
 # Titolo e sottotilolo
 st.set_page_config(page_title="EcoMonitor Dashboard", layout="wide")
 st.title("EcoMonitor Dashboard")
-st.caption("Monitoraggio ambientale — Classe Quarta ITIS Informatica")
+st.caption("Monitoraggio ambientale")
 
 #CSS 
 st.markdown("""
