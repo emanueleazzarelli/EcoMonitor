@@ -3,12 +3,12 @@ import pandas as pd
 import os
 
 CSV_FILE = 'misure.csv'
-
+# Titolo e sottotilolo
 st.set_page_config(page_title="EcoMonitor Dashboard", layout="wide")
 st.title("EcoMonitor Dashboard")
 st.caption("Monitoraggio ambientale — Classe Quarta ITIS Informatica")
 
-# --- CSS DARK TEAL MODERNO ---
+#CSS 
 st.markdown("""
 <style>
  
@@ -84,7 +84,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Caricamento dati ---
+# Controllo se misure.csv esiste
 if not os.path.exists(CSV_FILE):
     st.warning("File misure.csv non trovato. Avvia il server e invia alcune misure.")
     st.stop()
@@ -99,7 +99,7 @@ df['valore'] = pd.to_numeric(df['valore'], errors='coerce')
 df['data_ora'] = pd.to_datetime(df['data_ora'], errors='coerce')
 df = df.dropna(subset=['valore'])
 
-# --- Filtri sidebar ---
+# Filtri e menu nella colonna a sinistra
 st.sidebar.header("Filtri")
 sensori_disponibili = sorted(df['sensore'].unique().tolist())
 sensore_sel = st.sidebar.multiselect("Sensore", sensori_disponibili, default=sensori_disponibili)
@@ -119,8 +119,8 @@ df_filt = df[
 if df_filt.empty:
     st.warning("Nessun dato con i filtri selezionati.")
     st.stop()
-
-# --- KPI ---
+ 
+# KPI
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Misure totali", len(df_filt))
 col2.metric("Valore medio", f"{df_filt['valore'].mean():.1f}")
@@ -130,7 +130,7 @@ col4.metric("Luoghi", df_filt['luogo'].nunique())
 st.divider()
 
 
-# --- Valore medio per luogo ---
+# Valore medio per luogo
 st.subheader("Valore medio per luogo (per sensore)")
 for sensore in sensore_sel:
     df_s = df_filt[df_filt['sensore'] == sensore]
@@ -141,7 +141,7 @@ for sensore in sensore_sel:
 
 st.divider()
 
-# --- Classifica luoghi ---
+# Classifica dei luoghi
 st.subheader("Classifica luoghi (valore medio)")
 classifica = df_filt.groupby(['luogo', 'sensore'])['valore'].mean().reset_index()
 classifica.columns = ['Luogo', 'Sensore', 'Valore medio']
@@ -151,13 +151,13 @@ st.dataframe(classifica, use_container_width=True)
 
 st.divider()
 
-# --- Misure per studente ---
+# Misure per studente
 st.subheader("Numero di misure per studente")
 st.bar_chart(df_filt['studente'].value_counts())
 
 st.divider()
 
-# --- Statistiche per sensore ---
+# Statistiche per sensore
 st.subheader("Statistiche per sensore")
 stats = df_filt.groupby('sensore')['valore'].agg(['count', 'mean', 'min', 'max']).reset_index()
 stats.columns = ['Sensore', 'Misure', 'Media', 'Min', 'Max']
@@ -168,7 +168,6 @@ st.dataframe(stats, use_container_width=True)
 
 st.divider()
 
-# --- Tabella completa ---
 st.subheader("Tabella completa dei dati")
 st.dataframe(df_filt.sort_values('data_ora', ascending=False), use_container_width=True)
 
