@@ -73,7 +73,7 @@ def gestione_client(connection, address):
         connection.close()
         print(f"Connessione chiusa con il client: {address}")
 
-# --- Avvio server ---
+
 init_csv()
 server_address = ('127.0.0.1', 12345)
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
